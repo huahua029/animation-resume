@@ -50,6 +50,9 @@ html{
   animation: breath 0.8s infinite alternate-reverse;
 }
 
+
+`
+var result2 = `
 /*
 不玩了～我来介绍下我自己～
 来一张白纸～
@@ -71,13 +74,18 @@ html{
   height: 100%;
   border-radius: 2px;
 }
-`
-var result2 = `
 /*
-接下来，将Markdown变成HTML
+看简历哦～
 */
+`
+var result3 = `
 /*
-接下来，给HTML加样式
+接下来，我们将markdown变为html
+*/
+`
+var result4 = `
+/*
+最后，给HTML加样式
 */
 h2{
    color: rgb(37, 70, 101)
@@ -145,7 +153,11 @@ writeCode('', result, () => {
         creatPaper(() => {
             writeCode(result, result2, () => {
                 writeMarkdomn(md, () => {
-                    markdownToHtml(md)
+                    writeCode(result + result2, result3, () => {
+                        markdownToHtml(md, () => {
+                            writeCode(result + result2 + result3, result4)
+                        })
+                    })
                 })
             })
         })
@@ -176,6 +188,18 @@ function writeMarkdomn(markdowm, fn) {
     }, 20)
 }
 
-function markdownToHtml(md) {
-    document.querySelector('#paper>pre').innerHTML = marked(md);
+function markdownToHtml(md, fn) {
+    // let domPer = document.querySelector('#paper>pre').innerHTML = marked(md);
+    let domPer = document.querySelector('#paper>pre')
+    let n = 0
+    let id = setInterval(() => {
+        n++
+        domPer.innerHTML = marked(md.substring(0, n))
+        domPer.scrollTop = domPer.scrollHeight
+        if (n >= md.length) {
+            window.clearInterval(id)
+            fn()
+        }
+    }, 20)
+
 }
